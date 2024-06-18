@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\LoginController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\UserController as ControllersUserController;
 use Illuminate\Http\Request;
@@ -26,8 +27,26 @@ use Illuminate\Support\Facades\Route;
 //     ], 200);
 // });
 
-Route::get('/users', [UserController::class, 'index']); // GET - http://127.0.0.1:8000/api/users?page=1
-Route::get('/users/{user}', [UserController::class, 'show']); // GET - http://127.0.0.1:8000/api/users/1
-Route::post('/users', [UserController::class, 'store']); // GET - http://127.0.0.1:8000/api/users
-Route::put('/users/{user}', [UserController::class, 'update']); // PUT - http://127.0.0.1:8000/api/users/1
-Route::delete('/users/{user}', [UserController::class, 'destroy']); // DELETE - http://127.0.0.1:8000/api/users/1
+
+
+
+// Rota pública
+Route::post('/', [LoginController::class, 'login']);
+
+// Rota restrita
+
+Route::group(['middleware' => ['auth:sanctum']], function(){
+    Route::get('/users', [UserController::class, 'index']); // GET - http://127.0.0.1:8000/api/users?page=1
+    Route::get('/users/{user}', [UserController::class, 'show']); // GET - http://127.0.0.1:8000/api/users/1
+    Route::post('/users', [UserController::class, 'store']); // GET - http://127.0.0.1:8000/api/users
+    Route::put('/users/{user}', [UserController::class, 'update']); // PUT - http://127.0.0.1:8000/api/users/1
+    Route::delete('/users/{user}', [UserController::class, 'destroy']); // DELETE - http://127.0.0.1:8000/api/users/1
+    Route::post('/logout/{user}', [LoginController::class, 'logout']);
+
+ });
+
+// Route::get('/users', [UserController::class, 'index']); // GET - http://127.0.0.1:8000/api/users?page=1
+// Route::get('/users/{user}', [UserController::class, 'show']); // GET - http://127.0.0.1:8000/api/users/1
+// Route::post('/users', [UserController::class, 'store']); // GET - http://127.0.0.1:8000/api/users
+// Route::put('/users/{user}', [UserController::class, 'update']); // PUT - http://127.0.0.1:8000/api/users/1
+// Route::delete('/users/{user}', [UserController::class, 'destroy']); // DELETE - http://127.0.0.1:8000/api/users/1

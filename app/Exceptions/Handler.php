@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
 
@@ -27,4 +28,12 @@ class Handler extends ExceptionHandler
             //
         });
     }
+    protected function unauthenticated($request, AuthenticationException $exception)
+    {
+        return response()->json([
+            'error' => 'Acesso não autorizado. Por favor, forneça um token válido.',
+            'code' => 401
+        ], 401);
+    }
+    
 }
