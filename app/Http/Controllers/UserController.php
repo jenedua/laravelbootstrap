@@ -11,4 +11,12 @@ class UserController extends Controller
     {
         return view('admin.users', ['users' => User::all()] );
     }
+
+    public function create()
+    {
+        //Caregar o formulario cadastrar
+
+    }
+
+
 }

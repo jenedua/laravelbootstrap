@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\JobSendWelcomeEmail;
+use App\Mail\SendWelcomeEmail;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Registered;
@@ -10,6 +12,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 
@@ -41,6 +44,14 @@ class RegisteredUserController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
+
+        //Enviar e-mail
+       // Mail::to($user->email)->send(new SendWelcomeEmail($user));
+
+       // Agendar o envio da e-mail no job
+
+        JobSendWelcomeEmail::dispatch($user->id)->onQueue('default');
+
 
         event(new Registered($user));
 
